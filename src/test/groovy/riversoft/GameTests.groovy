@@ -188,6 +188,7 @@ class GameTests extends Specification {
         ]
         int x1 = 2
         int y1 = 3
+
         int x2 = 3
         int y2 = 3
 
