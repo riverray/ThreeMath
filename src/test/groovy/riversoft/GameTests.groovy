@@ -1,9 +1,7 @@
 package riversoft
 
-
 import riversoft.base.FieldParams
 import riversoft.base.Game
-import riversoft.base.MainField
 import riversoft.base.RetModel
 import spock.lang.Specification
 
