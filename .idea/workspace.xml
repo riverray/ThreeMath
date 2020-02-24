@@ -52,47 +52,9 @@
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="inlay.hints.Groovy" />
+    <property name="settings.editor.selected.configurable" value="preferences.externalTools" />
   </component>
   <component name="RunManager" selected="JUnit.GameTests">
-    <configuration name="ThreeMath [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="build" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="ThreeMath [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="clean" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
-      <method v="2" />
-    </configuration>
     <configuration name="GameTests" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ThreeMath.test" />
       <extension name="coverage">
@@ -103,7 +65,6 @@
       </extension>
       <option name="PACKAGE_NAME" value="riversoft" />
       <option name="MAIN_CLASS_NAME" value="riversoft.GameTests" />
-      <option name="METHOD_NAME" value="обмен с формированием одной линии" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -125,6 +86,54 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="GameTests.обмен с формированием одной линии" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ThreeMath.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="riversoft.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="riversoft" />
+      <option name="MAIN_CLASS_NAME" value="riversoft.GameTests" />
+      <option name="METHOD_NAME" value="обмен с формированием одной линии" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GameTests.стартовое поле нет линий" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ThreeMath.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="riversoft.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="riversoft" />
+      <option name="MAIN_CLASS_NAME" value="riversoft.GameTests" />
+      <option name="METHOD_NAME" value="стартовое поле нет линий" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GameTests.стартовое поле основные параметры" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ThreeMath.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="riversoft.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="riversoft" />
+      <option name="MAIN_CLASS_NAME" value="riversoft.GameTests" />
+      <option name="METHOD_NAME" value="стартовое поле основные параметры" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="GameTests.стартовое поле" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ThreeMath.test" />
       <extension name="coverage">
@@ -136,6 +145,38 @@
       <option name="PACKAGE_NAME" value="riversoft" />
       <option name="MAIN_CLASS_NAME" value="riversoft.GameTests" />
       <option name="METHOD_NAME" value="стартовое поле" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GameTests.невозможность обмена" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ThreeMath.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="riversoft.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="riversoft" />
+      <option name="MAIN_CLASS_NAME" value="riversoft.GameTests" />
+      <option name="METHOD_NAME" value="невозможность обмена" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="GameTests.невозможность обмена" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ThreeMath.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="riversoft.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="riversoft" />
+      <option name="MAIN_CLASS_NAME" value="riversoft.GameTests" />
+      <option name="METHOD_NAME" value="невозможность обмена" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -160,10 +201,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.GameTests" />
+        <item itemvalue="JUnit.GameTests.стартовое поле нет линий" />
         <item itemvalue="JUnit.GameTests.стартовое поле" />
-        <item itemvalue="Gradle.ThreeMath [build]" />
-        <item itemvalue="Gradle.ThreeMath [clean]" />
-        <item itemvalue="JUnit.GameTests.обмен с формированием двух линии" />
       </list>
     </recent_temporary>
   </component>
@@ -185,54 +224,58 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="92" y="92" width="1736" height="856" key="#com.intellij.execution.junit2.states.ComparisonFailureState$DiffDialog/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581597818897" />
-    <state width="445" height="466" key="DebuggerActiveHint" timestamp="1581680513584">
+    <state x="756" y="380" width="408" height="288" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes" timestamp="1582280294770">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="445" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581680513584" />
+    <state x="756" y="380" width="408" height="288" key="#com.intellij.refactoring.move.moveClassesOrPackages.MoveClassesOrPackagesDialog.classes/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582280294770" />
+    <state width="485" height="466" key="DebuggerActiveHint" timestamp="1582536612786">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="485" height="466" key="DebuggerActiveHint/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582536612786" />
     <state x="740" y="276" key="FileChooserDialogImpl" timestamp="1581680384810">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="740" y="276" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581680384810" />
-    <state width="1877" height="198" key="GridCell.Tab.0.bottom" timestamp="1582199176768">
+    <state width="1877" height="162" key="GridCell.Tab.0.bottom" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176768" />
+    <state width="1877" height="162" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
     <state width="1877" height="395" key="GridCell.Tab.0.bottom/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1581519220791" />
-    <state width="1877" height="198" key="GridCell.Tab.0.center" timestamp="1582199176767">
+    <state width="1877" height="162" key="GridCell.Tab.0.center" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176767" />
+    <state width="1877" height="162" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
     <state width="1877" height="395" key="GridCell.Tab.0.center/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1581519220791" />
-    <state width="1877" height="198" key="GridCell.Tab.0.left" timestamp="1582199176767">
+    <state width="1877" height="162" key="GridCell.Tab.0.left" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176767" />
+    <state width="1877" height="162" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
     <state width="1877" height="395" key="GridCell.Tab.0.left/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1581519220791" />
-    <state width="1877" height="198" key="GridCell.Tab.0.right" timestamp="1582199176768">
+    <state width="1877" height="162" key="GridCell.Tab.0.right" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176768" />
+    <state width="1877" height="162" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
     <state width="1877" height="395" key="GridCell.Tab.0.right/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1581519220791" />
-    <state width="1877" height="198" key="GridCell.Tab.1.bottom" timestamp="1582199176768">
+    <state width="1877" height="162" key="GridCell.Tab.1.bottom" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176768" />
-    <state width="1877" height="198" key="GridCell.Tab.1.center" timestamp="1582199176768">
+    <state width="1877" height="162" key="GridCell.Tab.1.bottom/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
+    <state width="1877" height="162" key="GridCell.Tab.1.center" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176768" />
-    <state width="1877" height="198" key="GridCell.Tab.1.left" timestamp="1582199176768">
+    <state width="1877" height="162" key="GridCell.Tab.1.center/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
+    <state width="1877" height="162" key="GridCell.Tab.1.left" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176768" />
-    <state width="1877" height="198" key="GridCell.Tab.1.right" timestamp="1582199176768">
+    <state width="1877" height="162" key="GridCell.Tab.1.left/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
+    <state width="1877" height="162" key="GridCell.Tab.1.right" timestamp="1582550967800">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1877" height="198" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582199176768" />
-    <state x="461" y="163" key="SettingsEditor" timestamp="1581665262612">
+    <state width="1877" height="162" key="GridCell.Tab.1.right/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582550967800" />
+    <state x="461" y="163" key="SettingsEditor" timestamp="1582536565369">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state x="461" y="163" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1581665262612" />
+    <state x="461" y="163" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@0.0.1920.1040" timestamp="1582536565369" />
     <state x="2381" y="163" key="SettingsEditor/0.0.1920.1040/1920.0.1920.1040@1920.0.1920.1040" timestamp="1581519213250" />
     <state x="656" y="118" width="607" height="804" key="find.popup" timestamp="1581595755936">
       <screen x="0" y="0" width="1920" height="1040" />
@@ -249,48 +292,28 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/groovy/riversoft/GameTests.groovy</url>
-          <line>61</line>
+          <line>62</line>
           <option name="timeStamp" value="29" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/groovy/riversoft/GameTests.groovy</url>
-          <line>136</line>
-          <option name="timeStamp" value="33" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/test/groovy/riversoft/GameTests.groovy</url>
-          <line>170</line>
+          <line>196</line>
           <option name="timeStamp" value="42" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/groovy/riversoft/base/Game.groovy</url>
-          <line>114</line>
-          <option name="timeStamp" value="53" />
+          <url>file://$PROJECT_DIR$/src/test/groovy/riversoft/Dises.groovy</url>
+          <line>38</line>
+          <option name="timeStamp" value="65" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/groovy/riversoft/base/Game.groovy</url>
-          <line>106</line>
-          <option name="timeStamp" value="54" />
+          <url>file://$PROJECT_DIR$/src/test/groovy/riversoft/GameTests.groovy</url>
+          <line>71</line>
+          <option name="timeStamp" value="75" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/groovy/riversoft/base/Game.groovy</url>
-          <line>141</line>
-          <option name="timeStamp" value="56" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/groovy/riversoft/base/Game.groovy</url>
-          <line>150</line>
-          <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/groovy/riversoft/base/Game.groovy</url>
-          <line>153</line>
-          <option name="timeStamp" value="58" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/groovy/riversoft/base/Game.groovy</url>
-          <line>156</line>
-          <option name="timeStamp" value="60" />
+          <url>file://$PROJECT_DIR$/src/test/groovy/riversoft/GameTests.groovy</url>
+          <line>120</line>
+          <option name="timeStamp" value="76" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
@@ -300,6 +323,7 @@
         <watch expression="startMas" />
         <watch expression="posX2" />
         <watch expression="((String[][])mas)[2]" custom="java.lang.String[][]" />
+        <watch expression="((Game)this).field" custom="riversoft.base.Game" />
       </configuration>
     </watches-manager>
   </component>

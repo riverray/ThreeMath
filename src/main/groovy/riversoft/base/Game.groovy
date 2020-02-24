@@ -46,7 +46,33 @@ class Game {
             }
         }
 
-        allFields.add(new Field(win: 0, map: convertTwoMasToOneMas(field.map), lines: []))
+        // проверка на наличие линий
+        def mas = field.map
+        checkForLines(mas)
+
+        while (field.lines.any()) {
+            // пробуем заменить часть символов и проверить на линии
+            for (int i = 0; i < field.lines.size(); i++) {
+                int number = rand.nextInt(field.lines[i].count)
+                int x = field.lines[i].positions[number][0]
+                int y = field.lines[i].positions[number][1]
+                String sym = params.symbols[rand.nextInt(params.symbols.size())].name
+                while (sym == mas[x][y]) {
+                    sym = params.symbols[rand.nextInt(params.symbols.size())].name
+                }
+                mas[x][y] = sym
+
+            }
+
+            field.lines.clear()
+
+            checkForLines(mas)
+            111
+        }
+
+        // должно быть потенциально хотя бы одна линия
+
+        allFields.add(new Field(win: 0, map: convertTwoMasToOneMas(field.map), lines: field.lines.collect()))
 
         return new RetModel(
                 level: level,
@@ -111,6 +137,8 @@ class Game {
             }
             field.lines.clear()
 
+            List<List<String>> newSymbols = []
+
             // опускаем символы на низ матрицы
             for (int j = 0; j < params.fieldWidth; j++) {
                 // проверяем наличие нулевых символов
@@ -136,13 +164,18 @@ class Game {
                         mas[i][j] = "0"
                     }
                 }
+                newSymbols
             }
 
             // досыпаем символы
             for (int j = 0; j < params.fieldWidth; j++) {
+                List<String> tempCol = []
+                newSymbols.add([])
                 for (int i = 0; i < params.fieldHeight; i++) {
                     if (field.map[i][j] == "0") {
                         field.map[i][j] = params.symbols[rand.nextInt(params.symbols.size())].name
+                        newSymbols[j].add(field.map[i][j])
+                        tempCol.add(field.map[i][j])
                     }
                 }
             }
@@ -151,13 +184,32 @@ class Game {
             checkForLines(mas)
 
             // заносим поле
-            allFields.add(new Field(win: (field.lines.any() ? field.lines.sum { t -> t.win } : 0), map: convertTwoMasToOneMas(field.map), lines: field.lines.collect()))
+            allFields.add(new Field(
+                    win: (field.lines.any() ? field.lines.sum { t -> t.win } : 0),
+                    map: convertTwoMasToOneMas(field.map),
+                    newSymbols: newSymbols.collect(),
+                    lines: field.lines.collect()))
 
             // если есть линии - заносим и продолжаем
             if (!field.lines.any()) {
                 isContinue = false
             }
         }
+
+        // меняем местами позиции в массиве
+        for (int i = 0; i < allFields.size(); i++) {
+            if (allFields[i].lines.any()) {
+                for (int j = 0; j < allFields[i].lines.size(); j++) {
+                    for (int a = 0; a < allFields[i].lines[j].positions.size(); a++) {
+                        int temp = allFields[i].lines[j].positions[a][0]
+                        allFields[i].lines[j].positions[a][0] = allFields[i].lines[j].positions[a][1]
+                        allFields[i].lines[j].positions[a][1] = temp
+                    }
+                }
+            }
+        }
+
+        // занесение только символов, которые досыпаются
 
         int totalWin = allFields.sum { t -> t.win }
         currentWin += totalWin
@@ -170,7 +222,6 @@ class Game {
                 params: getCurrentGameParams(),
                 allFields: allFields.collect()
         )
-
     }
 
     private void tryFindLinesAfterSwap(String[][] mas, int x1, int y1, int x2, int y2) {
@@ -219,7 +270,7 @@ class Game {
             }
         }
         if (poses.size() >= 3) {
-            field.lines.add(new Line(symbol: symbol, count: count, positions: poses.collect(), indexes: indexes.collect(), win: count))
+            field.lines.add(new Line(symbol: symbol, count: count, positions: poses.collect(), win: count))
         }
 
         // проверяем столбец второй позиции с новым символом
@@ -242,7 +293,7 @@ class Game {
             }
         }
         if (poses.size() >= 3) {
-            field.lines.add(new Line(symbol: symbol, count: count, positions: poses.collect(), indexes: indexes.collect(), win: count))
+            field.lines.add(new Line(symbol: symbol, count: count, positions: poses.collect(), win: count))
         }
 
         111
@@ -272,7 +323,7 @@ class Game {
                 else {
                     // если из предыдущего символа уже собралась линия - сохраняем ее
                     if (count >= 3) {
-                        field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), indexes: indexes.collect(), win: count))
+                        field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), win: count))
                     }
                     // меняем символ и начинаем считать дальше
                     poses.clear()
@@ -285,10 +336,9 @@ class Game {
             }
 
             if (count >= 3) {
-                field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), indexes: indexes.collect(), win: count))
+                field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), win: count))
             }
         }
-
 
         // проверяем столбцы на линии
         poses = []
@@ -312,7 +362,7 @@ class Game {
                 else {
                     // если из предыдущего символа уже собралась линия - сохраняем ее
                     if (count >= 3) {
-                        field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), indexes: indexes.collect(), win: count))
+                        field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), win: count))
                     }
                     // меняем символ и начинаем считать дальше
                     poses.clear()
@@ -325,7 +375,50 @@ class Game {
             }
 
             if (count >= 3) {
-                field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), indexes: indexes.collect(), win: count))
+                field.lines.add(new Line(symbol: sym, count: count, positions: poses.collect(), win: count))
+            }
+        }
+    }
+
+    // проверяем все поле на наличие потенциальных линий
+    private boolean checkForPotentialLines(String[][] mas) {
+        List<String> symbols
+        // проверяем два в линии и через одну или сбоку
+        for (int i = 0; i < params.fieldHeight; i++) {
+            symbols = []
+            for (int j = 0; j < params.fieldWidth; j++) {
+                symbols.add(mas[i][j])
+            }
+
+            if (checkPotentialLine(mas, i)) {
+                return true
+            }
+        }
+    }
+
+    private boolean checkPotentialLine(List<Integer> symbols) {
+        String sym = symbols[0]
+        int startPos = 0
+        int count = 1
+
+        for (int i = 1; i < symbols.size(); i++) {
+            // символ совпадает - этого достаточно, тогда проверяем
+            if (symbols[i] == sym) {
+                count++
+            }
+            // символ не совпал
+            else {
+                if (count >= 2) {
+                    // проверим через один вперед
+                    if (i + 1 < symbols.size()) {
+                        if (symbols[i + 1] == sym) {
+                            return true
+                        }
+                    }
+                }
+                sym = symbols[i]
+                count = 1
+                startPos = j
             }
         }
     }
@@ -341,6 +434,4 @@ class Game {
 
         return newMas
     }
-
-
 }

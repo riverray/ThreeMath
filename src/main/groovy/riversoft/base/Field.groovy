@@ -5,6 +5,8 @@ class Field {
     String[] map
     List<Line> lines
 
+    List<List<String>> newSymbols = []
+
     int win
 
     Field() {

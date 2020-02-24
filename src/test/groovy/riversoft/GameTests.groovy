@@ -1,5 +1,6 @@
 package riversoft
 
+import groovy.json.JsonOutput
 import riversoft.base.FieldParams
 import riversoft.base.Game
 import riversoft.base.RetModel
@@ -50,7 +51,7 @@ class GameTests extends Specification {
         thrown(Exception)
     }
 
-    def 'стартовое поле'() {
+    def 'стартовое поле основные параметры'() {
         given:
         Game game = new Game()
         int level = 1
@@ -70,6 +71,7 @@ class GameTests extends Specification {
         startField.allFields.size() == 1
         startField.allFields[0].win == 0
         startField.allFields[0].lines.empty
+        startField.allFields[0].lines.size() == 0
 
         when:
         level = 2
@@ -105,6 +107,28 @@ class GameTests extends Specification {
         startField.allFields[0].win == 0
         startField.allFields[0].lines.empty
     }
+
+    def 'стартовое поле нет линий'() {
+        given:
+        Game game = new Game()
+        int count = 1000
+        RetModel startField
+        Random rand = new Random()
+        boolean flag = true
+
+        when:
+        for (int i = 0; i < count; i++) {
+            startField = game.getStartField(rand.nextInt(3) + 1)
+            if (startField.allFields.size() > 1 || startField.allFields[0].lines.any()) {
+                flag = false
+                break
+            }
+        }
+
+        then:
+        flag
+    }
+
 
     def 'невозможность обмена'() {
         given:
@@ -162,6 +186,8 @@ class GameTests extends Specification {
         game.getStartField(level)
         game.field.map = tempMas
         def model = game.makeMove(x1, y1, x2, y2)
+
+        def s = JsonOutput.toJson(model)
 
         then:
         model.allFields.size() >= 2

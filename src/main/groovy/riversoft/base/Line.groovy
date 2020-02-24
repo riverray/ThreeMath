@@ -8,5 +8,5 @@ class Line {
     int count
     int win
     List<List<Integer>> positions = []
-    List<Integer> indexes = []
+//    List<Integer> indexes = []
 }
