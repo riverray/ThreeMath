@@ -390,7 +390,7 @@ class Game {
 
     // проверяем все поле на наличие потенциальных линий
     private boolean checkForPotentialLines(String[][] mas) {
-        // проверяем два в линии и через одну или сбоку
+        // проверяем два в строке и через одну или сверху/снизу
         for (int i = 0; i < params.fieldHeight; i++) {
             String sym = mas[i][0]
             int startPos = 0
@@ -441,50 +441,89 @@ class Game {
                 }
             }
         }
-    }
 
-//    // проверяем все поле на наличие потенциальных линий
-//    private boolean checkForPotentialLines(String[][] mas) {
-//        List<String> symbols
-//        // проверяем два в линии и через одну или сбоку
-//        for (int i = 0; i < params.fieldHeight; i++) {
-//            symbols = []
-//            for (int j = 0; j < params.fieldWidth; j++) {
-//                symbols.add(mas[i][j])
-//            }
-//
-//            if (checkPotentialLine(symbols)) {
-//                return true
-//            }
-//        }
-//    }
-//
-//    private boolean checkPotentialLine(List<Integer> symbols) {
-//        String sym = symbols[0]
-//        int startPos = 0
-//        int count = 1
-//
-//        for (int i = 1; i < symbols.size(); i++) {
-//            // символ совпадает - этого достаточно, тогда проверяем
-//            if (symbols[i] == sym) {
-//                count++
-//            }
-//            // символ не совпал
-//            else {
-//                if (count >= 2) {
-//                    // проверим через один вперед
-//                    if (i + 1 < symbols.size()) {
-//                        if (symbols[i + 1] == sym) {
-//                            return true
-//                        }
-//                    }
-//                }
-//                sym = symbols[i]
-//                count = 1
-//                startPos = i
-//            }
-//        }
-//    }
+        // проверяем два в ряду и через одну или сбоку
+        for (int j = 0; j < params.fieldWidth; j++) {
+            String sym = mas[0][j]
+            int startPos = 0
+            int count = 1
+
+            for (int i = 1; i < params.fieldHeight; i++) {
+                // символ совпадает - этого достаточно, тогда проверяем
+                if (mas[i][j] == sym) {
+                    count++
+                }
+                // символ не совпал
+                else {
+                    if (count >= 2) {
+                        // проверим через один вниз
+                        if (i + 1 < params.fieldHeight) {
+                            if (mas[i + 1][j] == sym) {
+                                return true
+                            }
+                        }
+                        // проверим через один вверх
+                        if (startPos - 2 >= 0) {
+                            if (mas[startPos - 2][j] == sym) {
+                                return true
+                            }
+                        }
+                        // проверим влево от символов
+                        if (j - 1 >= 0) {
+                            if (mas[i][j - 1] == sym) {
+                                return true
+                            }
+                            if (startPos - 1 >= 0 && mas[startPos - 1][j - 1] == sym) {
+                                return true
+                            }
+                        }
+                        // проверим вправо от символов
+                        if (j + 1 < params.fieldWidth) {
+                            if (mas[i][j + 1] == sym) {
+                                return true
+                            }
+                            if (startPos - 1 >= 0 && mas[startPos - 1][j + 1] == sym) {
+                                return true
+                            }
+                        }
+                    }
+                    sym = mas[i][j]
+                    count = 1
+                    startPos = i
+                }
+            }
+        }
+
+        // проверяем через один в строку и сверху/снизу
+        for (int i = 0; i < params.fieldHeight; i++) {
+            for (int j = 0; j < params.fieldWidth - 2; j++) {
+                // есть строка вверху и символ в ней посередине совпадает
+                if (i > 0 && mas[i][j] == mas[i][j + 2] && mas[i][j] == mas[i - 1][j + 1]) {
+                    return true
+                }
+                // есть строка внизу и символ в ней посередине совпадает
+                if (i < params.fieldHeight - 1 && mas[i][j] == mas[i][j + 2] && mas[i][j] == mas[i + 1][j + 1]) {
+                    return true
+                }
+            }
+        }
+        // проверяем через один в столбец и слева/справа
+        for (int j = 0; j < params.fieldWidth; j++) {
+            for (int i = 0; i < params.fieldHeight - 2; i++) {
+                // есть столбец слева и символ в нем посередине совпадает
+                if (j > 0 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j - 1]) {
+                    return true
+                }
+                // есть столбец справа и символ в нем посередине совпадает
+                if (i < params.fieldWidth - 1 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j + 1]) {
+                    return true
+                }
+            }
+        }
+
+
+
+    }
 
     String[] convertTwoMasToOneMas(String[][] mas) {
         String[] newMas = new String[mas.length * mas[0].length]
