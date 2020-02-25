@@ -34,43 +34,50 @@ class Game {
 
     RetModel getStartField(int level) {
         hod = currentWin = 0
-        allFields.clear()
         this.level = level
         params = getFieldParams(level)
+
+        allFields.clear()
         field = new MainField(params)
 
-        // заполнение символами
-        for (int i = 0; i < params.fieldWidth; i++) {
-            for (int j = 0; j < params.fieldHeight; j++) {
-                field.map[i][j] = params.symbols[rand.nextInt(params.symbols.size())].name
-            }
-        }
+        boolean correctMatrix = true
 
-        // проверка на наличие линий
-        def mas = field.map
-        checkForLines(mas)
-
-        while (field.lines.any()) {
-            // пробуем заменить часть символов и проверить на линии
-            for (int i = 0; i < field.lines.size(); i++) {
-                int number = rand.nextInt(field.lines[i].count)
-                int x = field.lines[i].positions[number][0]
-                int y = field.lines[i].positions[number][1]
-                String sym = params.symbols[rand.nextInt(params.symbols.size())].name
-                while (sym == mas[x][y]) {
-                    sym = params.symbols[rand.nextInt(params.symbols.size())].name
+        while (correctMatrix) {
+            // заполнение символами
+            for (int i = 0; i < params.fieldWidth; i++) {
+                for (int j = 0; j < params.fieldHeight; j++) {
+                    field.map[i][j] = params.symbols[rand.nextInt(params.symbols.size())].name
                 }
-                mas[x][y] = sym
-
             }
 
-            field.lines.clear()
-
+            // проверка на наличие линий
+            def mas = field.map
             checkForLines(mas)
-            111
-        }
 
-        // должно быть потенциально хотя бы одна линия
+            // пока есть линии - не выходим
+            while (field.lines.any()) {
+                // пробуем заменить часть символов и проверить на линии
+                for (int i = 0; i < field.lines.size(); i++) {
+                    int number = rand.nextInt(field.lines[i].count)
+                    int x = field.lines[i].positions[number][0]
+                    int y = field.lines[i].positions[number][1]
+                    String sym = params.symbols[rand.nextInt(params.symbols.size())].name
+                    while (sym == mas[x][y]) {
+                        sym = params.symbols[rand.nextInt(params.symbols.size())].name
+                    }
+                    mas[x][y] = sym
+
+                }
+
+                field.lines.clear()
+
+                checkForLines(mas)
+                111
+            }
+
+            // должно быть потенциально хотя бы одна линия
+            correctMatrix = !checkForPotentialLines(mas)
+        }
 
         allFields.add(new Field(win: 0, map: convertTwoMasToOneMas(field.map), lines: field.lines.collect()))
 
@@ -380,48 +387,104 @@ class Game {
         }
     }
 
+
     // проверяем все поле на наличие потенциальных линий
     private boolean checkForPotentialLines(String[][] mas) {
-        List<String> symbols
         // проверяем два в линии и через одну или сбоку
         for (int i = 0; i < params.fieldHeight; i++) {
-            symbols = []
-            for (int j = 0; j < params.fieldWidth; j++) {
-                symbols.add(mas[i][j])
-            }
+            String sym = mas[i][0]
+            int startPos = 0
+            int count = 1
 
-            if (checkPotentialLine(mas, i)) {
-                return true
-            }
-        }
-    }
-
-    private boolean checkPotentialLine(List<Integer> symbols) {
-        String sym = symbols[0]
-        int startPos = 0
-        int count = 1
-
-        for (int i = 1; i < symbols.size(); i++) {
-            // символ совпадает - этого достаточно, тогда проверяем
-            if (symbols[i] == sym) {
-                count++
-            }
-            // символ не совпал
-            else {
-                if (count >= 2) {
-                    // проверим через один вперед
-                    if (i + 1 < symbols.size()) {
-                        if (symbols[i + 1] == sym) {
-                            return true
+            for (int j = 1; j < params.fieldWidth; j++) {
+                // символ совпадает - этого достаточно, тогда проверяем
+                if (mas[i][j] == sym) {
+                    count++
+                }
+                // символ не совпал
+                else {
+                    if (count >= 2) {
+                        // проверим через один вперед
+                        if (j + 1 < params.fieldWidth) {
+                            if (mas[i][j + 1] == sym) {
+                                return true
+                            }
+                        }
+                        // проверим через один назад
+                        if (startPos - 2 >= 0) {
+                            if (mas[i][startPos - 2] == sym) {
+                                return true
+                            }
+                        }
+                        // проверим вверх от символов
+                        if (i - 1 >= 0) {
+                            if (mas[i - 1][j] == sym) {
+                                return true
+                            }
+                            if (startPos - 1 >= 0 && mas[i - 1][startPos - 1] == sym) {
+                                return true
+                            }
+                        }
+                        // проверим вниз от символов
+                        if (i + 1 < params.fieldHeight) {
+                            if (mas[i + 1][j] == sym) {
+                                return true
+                            }
+                            if (startPos - 1 >= 0 && mas[i + 1][startPos - 1] == sym) {
+                                return true
+                            }
                         }
                     }
+                    sym = mas[i][j]
+                    count = 1
+                    startPos = j
                 }
-                sym = symbols[i]
-                count = 1
-                startPos = j
             }
         }
     }
+
+//    // проверяем все поле на наличие потенциальных линий
+//    private boolean checkForPotentialLines(String[][] mas) {
+//        List<String> symbols
+//        // проверяем два в линии и через одну или сбоку
+//        for (int i = 0; i < params.fieldHeight; i++) {
+//            symbols = []
+//            for (int j = 0; j < params.fieldWidth; j++) {
+//                symbols.add(mas[i][j])
+//            }
+//
+//            if (checkPotentialLine(symbols)) {
+//                return true
+//            }
+//        }
+//    }
+//
+//    private boolean checkPotentialLine(List<Integer> symbols) {
+//        String sym = symbols[0]
+//        int startPos = 0
+//        int count = 1
+//
+//        for (int i = 1; i < symbols.size(); i++) {
+//            // символ совпадает - этого достаточно, тогда проверяем
+//            if (symbols[i] == sym) {
+//                count++
+//            }
+//            // символ не совпал
+//            else {
+//                if (count >= 2) {
+//                    // проверим через один вперед
+//                    if (i + 1 < symbols.size()) {
+//                        if (symbols[i + 1] == sym) {
+//                            return true
+//                        }
+//                    }
+//                }
+//                sym = symbols[i]
+//                count = 1
+//                startPos = i
+//            }
+//        }
+//    }
 
     String[] convertTwoMasToOneMas(String[][] mas) {
         String[] newMas = new String[mas.length * mas[0].length]
