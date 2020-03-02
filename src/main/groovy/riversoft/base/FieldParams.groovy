@@ -1,12 +1,15 @@
 package riversoft.base
 
 class FieldParams {
-    int fieldWidth
-    int fieldHeight
+    int width // ширина поля
+    int height // высота поля
 
-    int needWin
+    EndLevelParams endParams // параметры для окончания уровня
 
-    List<Symbol> symbols
+//    int needWin // необходимое количество очков
+//    int hodCount // ограничение на количество ходов
 
-    List<Integer> hidePositions
+    List<Symbol> symbols // наборы символов
+
+    List<Integer> hidePositions // неактивные позиции
 }

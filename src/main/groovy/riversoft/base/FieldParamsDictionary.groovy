@@ -17,15 +17,17 @@ class FieldParamsDictionary {
         // задаем номера символов, которые используются уровнем
         symbolsByLevels = [
                 [1, 2, 3, 4],
-                [1, 2, 3, 4],
+                [1, 2, 3, 4, 5],
                 [1, 2, 3, 4, 5]
         ]
 
         // TODO добавить возврат символов
-        fieldParams.addAll(new FieldParams(fieldWidth: 6, fieldHeight: 6, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(), needWin: 50))
-        fieldParams.addAll(new FieldParams(fieldWidth: 7, fieldHeight: 7, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(), needWin: 100))
-        fieldParams.addAll(new FieldParams(fieldWidth: 8, fieldHeight: 8, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(), needWin: 150))
-        111
+        fieldParams.addAll(new FieldParams(width: 6, height: 6, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(),
+                endParams: new EndLevelParams(needWin: 50)))
+        fieldParams.addAll(new FieldParams(width: 7, height: 7, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(),
+                endParams: new EndLevelParams(needWin: 100, hodCount: 20)))
+        fieldParams.addAll(new FieldParams(width: 8, height: 8, hidePositions: [0, 7, 56, 63], symbols: getLevelSymbols(fieldParams.size() + 1).collect(),
+                endParams: new EndLevelParams(symbolsTypeCount: [2, 2, 2, 2, 2], hodCount: 30)))
     }
 
     List<Symbol> getLevelSymbols(int level) {

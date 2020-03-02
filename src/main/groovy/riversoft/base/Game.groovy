@@ -22,6 +22,9 @@ class Game {
     // текущий выигрыш
     int currentWin
 
+    boolean hodLimit = false
+    int currentHodCount = 0
+
     Random rand = new Random()
 
     Game() {
@@ -37,6 +40,11 @@ class Game {
         this.level = level
         params = getFieldParams(level)
 
+        // устанавливаем ходлимит
+        if (params.endParams.hodCount > 0) {
+            hodLimit = true
+        }
+
         allFields.clear()
         field = new MainField(params)
 
@@ -44,8 +52,8 @@ class Game {
 
         while (correctMatrix) {
             // заполнение символами
-            for (int i = 0; i < params.fieldWidth; i++) {
-                for (int j = 0; j < params.fieldHeight; j++) {
+            for (int i = 0; i < params.width; i++) {
+                for (int j = 0; j < params.height; j++) {
                     field.map[i][j] = params.symbols[rand.nextInt(params.symbols.size())].name
                 }
             }
@@ -86,14 +94,14 @@ class Game {
                 hod: hod,
                 totalWin: 0,
                 currentWin: 0,
-                needWin: params.needWin,
+                endParams: params.endParams,
                 params: getCurrentGameParams(),
                 allFields: allFields.collect()
         )
     }
 
     RetModel makeMove(int posX1, int posY1, int posX2, int posY2) {
-        if (posX1 >= params.fieldWidth || posX2 >= params.fieldWidth || posY1 >= params.fieldHeight || posY2 >= params.fieldHeight ||
+        if (posX1 >= params.width || posX2 >= params.width || posY1 >= params.height || posY2 >= params.height ||
                 posX1 < 0 || posY1 < 0 || posX2 < 0 || posY2 < 0) {
             throw new RuntimeException("Cells not in field")
         }
@@ -123,7 +131,7 @@ class Game {
                     hod: hod,
                     totalWin: 0,
                     currentWin: 0,
-                    needWin: params.needWin,
+                    endParams: params.endParams,
                     params: getCurrentGameParams(),
                     allFields: allFields.collect()
             )
@@ -147,23 +155,23 @@ class Game {
             List<List<String>> newSymbols = []
 
             // опускаем символы на низ матрицы
-            for (int j = 0; j < params.fieldWidth; j++) {
+            for (int j = 0; j < params.width; j++) {
                 // проверяем наличие нулевых символов
                 int count = 0
                 List<String> tempMas = []
-                for (int i = params.fieldHeight - 1; i >= 0; i--) {
+                for (int i = params.height - 1; i >= 0; i--) {
                     if (/*mas[i][j] != "x" &&*/ mas[i][j] != "0") {
                         count++
                         tempMas.add(mas[i][j])
                     }
                 }
                 // если нет нулевых символов - ничего не делаем
-                if (count == params.fieldHeight) {
+                if (count == params.height) {
                     continue
                 }
                 // если же есть - пробуем опускать
                 int pos = 0
-                for (int i = params.fieldHeight - 1; i >= 0; i--) {
+                for (int i = params.height - 1; i >= 0; i--) {
                     if (pos < tempMas.size()) {
                         mas[i][j] = tempMas[pos++]
                     }
@@ -171,14 +179,14 @@ class Game {
                         mas[i][j] = "0"
                     }
                 }
-                newSymbols
+//                return newSymbols
             }
 
             // досыпаем символы
-            for (int j = 0; j < params.fieldWidth; j++) {
+            for (int j = 0; j < params.width; j++) {
                 List<String> tempCol = []
                 newSymbols.add([])
-                for (int i = 0; i < params.fieldHeight; i++) {
+                for (int i = 0; i < params.height; i++) {
                     if (field.map[i][j] == "0") {
                         field.map[i][j] = params.symbols[rand.nextInt(params.symbols.size())].name
                         newSymbols[j].add(field.map[i][j])
@@ -216,7 +224,15 @@ class Game {
             }
         }
 
-        // занесение только символов, которые досыпаются
+        boolean isEnd = false
+        if (hodLimit) {
+            currentHodCount++
+
+            if (currentHodCount == params.endParams.hodCount) {
+                isEnd = true
+            }
+
+        }
 
         int totalWin = allFields.sum { t -> t.win }
         currentWin += totalWin
@@ -225,9 +241,10 @@ class Game {
                 hod: hod,
                 totalWin: totalWin,
                 currentWin: currentWin,
-                needWin: params.needWin,
+                endParams: params.endParams,
                 params: getCurrentGameParams(),
-                allFields: allFields.collect()
+                allFields: allFields.collect(),
+                isEnd: isEnd
         )
     }
 
@@ -244,7 +261,7 @@ class Game {
     }
 
     private RetFieldParams getCurrentGameParams() {
-        new RetFieldParams(fieldWidth: params.fieldWidth, fieldHeight: params.fieldHeight, hidePositions: params.hidePositions.collect())
+        new RetFieldParams(fieldWidth: params.width, fieldHeight: params.height, hidePositions: params.hidePositions.collect())
     }
 
     // обмен местами символов в массиве
@@ -261,11 +278,11 @@ class Game {
 
         List<List<Integer>> poses = []
         List<Integer> indexes = []
-        for (int j = 0; j < params.fieldWidth; j++) {
+        for (int j = 0; j < params.width; j++) {
             if (j == y || mas[x][j] == symbol) {
                 count++
                 poses.add([x, j])
-                indexes.add(x * params.fieldWidth + j)
+                indexes.add(x * params.width + j)
             }
             else {
                 if (poses.any { t -> t[1] == y }) {
@@ -284,11 +301,11 @@ class Game {
         count = 0
         poses = []
         indexes = []
-        for (int i = 0; i < params.fieldWidth; i++) {
+        for (int i = 0; i < params.width; i++) {
             if (i == x || mas[i][y] == symbol) {
                 count++
                 poses.add([i, y])
-                indexes.add(i * params.fieldWidth + y)
+                indexes.add(i * params.width + y)
             }
             else {
                 if (poses.any { t -> t[0] == x }) {
@@ -311,20 +328,20 @@ class Game {
         // проверяем строки на линии
         List<List<Integer>> poses = []
         List<Integer> indexes = []
-        for (int i = 0; i < params.fieldHeight; i++) {
+        for (int i = 0; i < params.height; i++) {
             poses.clear()
             indexes.clear()
             String sym = mas[i][0]
             int count = 1
             poses.add([i, 0])
-            indexes.add(i * params.fieldWidth)
+            indexes.add(i * params.width)
 
-            for (int j = 1; j < params.fieldWidth; j++) {
+            for (int j = 1; j < params.width; j++) {
                 // символ совпадает - продолжаем считать
                 if (mas[i][j] == sym) {
                     count++
                     poses.add([i, j])
-                    indexes.add(i * params.fieldWidth + j)
+                    indexes.add(i * params.width + j)
                 }
                 // символ не совпал
                 else {
@@ -338,7 +355,7 @@ class Game {
                     sym = mas[i][j]
                     count = 1
                     poses.add([i, j])
-                    indexes.add(i * params.fieldWidth + j)
+                    indexes.add(i * params.width + j)
                 }
             }
 
@@ -350,7 +367,7 @@ class Game {
         // проверяем столбцы на линии
         poses = []
         indexes = []
-        for (int j = 0; j < params.fieldWidth; j++) {
+        for (int j = 0; j < params.width; j++) {
             poses.clear()
             indexes.clear()
             String sym = mas[0][j]
@@ -358,12 +375,12 @@ class Game {
             poses.add([0, j])
             indexes.add(j)
 
-            for (int i = 1; i < params.fieldHeight; i++) {
+            for (int i = 1; i < params.height; i++) {
                 // символ совпадает - продолжаем считать
                 if (mas[i][j] == sym) {
                     count++
                     poses.add([i, j])
-                    indexes.add(i * params.fieldWidth + j)
+                    indexes.add(i * params.width + j)
                 }
                 // символ не совпал
                 else {
@@ -377,7 +394,7 @@ class Game {
                     sym = mas[i][j]
                     count = 1
                     poses.add([i, j])
-                    indexes.add(i * params.fieldWidth + j)
+                    indexes.add(i * params.width + j)
                 }
             }
 
@@ -387,16 +404,15 @@ class Game {
         }
     }
 
-
     // проверяем все поле на наличие потенциальных линий
     private boolean checkForPotentialLines(String[][] mas) {
         // проверяем два в строке и через одну или сверху/снизу
-        for (int i = 0; i < params.fieldHeight; i++) {
+        for (int i = 0; i < params.height; i++) {
             String sym = mas[i][0]
             int startPos = 0
             int count = 1
 
-            for (int j = 1; j < params.fieldWidth; j++) {
+            for (int j = 1; j < params.width; j++) {
                 // символ совпадает - этого достаточно, тогда проверяем
                 if (mas[i][j] == sym) {
                     count++
@@ -405,7 +421,7 @@ class Game {
                 else {
                     if (count >= 2) {
                         // проверим через один вперед
-                        if (j + 1 < params.fieldWidth) {
+                        if (j + 1 < params.width) {
                             if (mas[i][j + 1] == sym) {
                                 return true
                             }
@@ -426,7 +442,7 @@ class Game {
                             }
                         }
                         // проверим вниз от символов
-                        if (i + 1 < params.fieldHeight) {
+                        if (i + 1 < params.height) {
                             if (mas[i + 1][j] == sym) {
                                 return true
                             }
@@ -443,12 +459,12 @@ class Game {
         }
 
         // проверяем два в ряду и через одну или сбоку
-        for (int j = 0; j < params.fieldWidth; j++) {
+        for (int j = 0; j < params.width; j++) {
             String sym = mas[0][j]
             int startPos = 0
             int count = 1
 
-            for (int i = 1; i < params.fieldHeight; i++) {
+            for (int i = 1; i < params.height; i++) {
                 // символ совпадает - этого достаточно, тогда проверяем
                 if (mas[i][j] == sym) {
                     count++
@@ -457,7 +473,7 @@ class Game {
                 else {
                     if (count >= 2) {
                         // проверим через один вниз
-                        if (i + 1 < params.fieldHeight) {
+                        if (i + 1 < params.height) {
                             if (mas[i + 1][j] == sym) {
                                 return true
                             }
@@ -478,7 +494,7 @@ class Game {
                             }
                         }
                         // проверим вправо от символов
-                        if (j + 1 < params.fieldWidth) {
+                        if (j + 1 < params.width) {
                             if (mas[i][j + 1] == sym) {
                                 return true
                             }
@@ -495,27 +511,27 @@ class Game {
         }
 
         // проверяем через один в строку и сверху/снизу
-        for (int i = 0; i < params.fieldHeight; i++) {
-            for (int j = 0; j < params.fieldWidth - 2; j++) {
+        for (int i = 0; i < params.height; i++) {
+            for (int j = 0; j < params.width - 2; j++) {
                 // есть строка вверху и символ в ней посередине совпадает
                 if (i > 0 && mas[i][j] == mas[i][j + 2] && mas[i][j] == mas[i - 1][j + 1]) {
                     return true
                 }
                 // есть строка внизу и символ в ней посередине совпадает
-                if (i < params.fieldHeight - 1 && mas[i][j] == mas[i][j + 2] && mas[i][j] == mas[i + 1][j + 1]) {
+                if (i < params.height - 1 && mas[i][j] == mas[i][j + 2] && mas[i][j] == mas[i + 1][j + 1]) {
                     return true
                 }
             }
         }
         // проверяем через один в столбец и слева/справа
-        for (int j = 0; j < params.fieldWidth; j++) {
-            for (int i = 0; i < params.fieldHeight - 2; i++) {
+        for (int j = 0; j < params.width; j++) {
+            for (int i = 0; i < params.height - 2; i++) {
                 // есть столбец слева и символ в нем посередине совпадает
                 if (j > 0 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j - 1]) {
                     return true
                 }
                 // есть столбец справа и символ в нем посередине совпадает
-                if (i < params.fieldWidth - 1 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j + 1]) {
+                if (i < params.width - 1 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j + 1]) {
                     return true
                 }
             }

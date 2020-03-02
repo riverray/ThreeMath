@@ -7,9 +7,11 @@ class RetModel {
 
     int totalWin
     int currentWin
-    int needWin
+    EndLevelParams endParams
 
     List<Field> allFields
+
+    boolean isEnd = false
 
 
     RetModel() {
@@ -24,10 +26,10 @@ class RetModel {
         totalWin = model.win
         totalWin = model.totalWin
 
-        this.params = new RetFieldParams(fieldHeight: model.params.fieldHeight, fieldWidth: model.params.fieldWidth, hidePositions: model.params.hidePositions.collect())
+        this.params = new RetFieldParams(fieldHeight: model.params.height, fieldWidth: model.params.width, hidePositions: model.params.hidePositions.collect())
 
-        for (int i = 0; i < model.params.fieldHeight; i++) {
-            for (int j = 0; j < model.params.fieldWidth; j++) {
+        for (int i = 0; i < model.params.height; i++) {
+            for (int j = 0; j < model.params.width; j++) {
                 field.add(model.map[i][j])
             }
         }

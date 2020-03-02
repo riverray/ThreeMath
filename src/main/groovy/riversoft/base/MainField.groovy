@@ -11,6 +11,6 @@ class MainField {
     }
 
     MainField(FieldParams params) {
-        map = new String[params.fieldHeight][params.fieldWidth]
+        map = new String[params.height][params.width]
     }
 }
