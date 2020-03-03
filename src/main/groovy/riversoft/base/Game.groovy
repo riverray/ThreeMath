@@ -1,5 +1,7 @@
 package riversoft.base
 
+import javax.swing.text.MaskFormatter
+
 class Game {
     // параметра поля
     FieldParams params
@@ -25,7 +27,12 @@ class Game {
     boolean hodLimit = false
     int currentHodCount = 0
 
+    boolean symbolsLimit = false
+    List<Integer> currentSymbolLimit = []
+
     Random rand = new Random()
+
+    String nonGameSym = "X"
 
     Game() {
         level = -1
@@ -36,13 +43,21 @@ class Game {
     }
 
     RetModel getStartField(int level) {
-        hod = currentWin = 0
+        hod = currentWin = currentHodCount = 0
+        hodLimit = symbolsLimit = false
+
         this.level = level
         params = getFieldParams(level)
 
         // устанавливаем ходлимит
         if (params.endParams.hodCount > 0) {
             hodLimit = true
+        }
+        // устанавливаем требование по количеству взорванных символов
+        if (params.endParams.symbolsTypeCount.size() > 0) {
+            symbolsLimit = true
+            currentSymbolLimit = params.endParams.symbolsTypeCount.collect()
+            111
         }
 
         allFields.clear()
@@ -85,6 +100,13 @@ class Game {
 
             // должно быть потенциально хотя бы одна линия
             correctMatrix = !checkForPotentialLines(mas)
+        }
+
+        if (params.hidePositions.any()) {
+            for (def pos : params.hidePositions) {
+//                field.map[0][0] = "0"
+                field.map[pos / params.width as int][pos % params.width] = nonGameSym
+            }
         }
 
         allFields.add(new Field(win: 0, map: convertTwoMasToOneMas(field.map), lines: field.lines.collect()))
@@ -144,6 +166,14 @@ class Game {
         boolean isContinue = true
 
         while (isContinue) {
+            // если окончание по количеству символов - уменьшаем
+            if (symbolsLimit) {
+                for (def line : field.lines) {
+                    111
+                    currentSymbolLimit[params.symbols.findIndexOf { t -> t.name == line.symbol }]--
+                }
+            }
+
             // заменяем символы на ноль
             for (def line : field.lines) {
                 for (def pos : line.positions) {
@@ -160,7 +190,7 @@ class Game {
                 int count = 0
                 List<String> tempMas = []
                 for (int i = params.height - 1; i >= 0; i--) {
-                    if (/*mas[i][j] != "x" &&*/ mas[i][j] != "0") {
+                    if (mas[i][j] != nonGameSym && mas[i][j] != "0") {
                         count++
                         tempMas.add(mas[i][j])
                     }
@@ -172,6 +202,9 @@ class Game {
                 // если же есть - пробуем опускать
                 int pos = 0
                 for (int i = params.height - 1; i >= 0; i--) {
+                    if (mas[i][j] == nonGameSym) {
+                        continue
+                    }
                     if (pos < tempMas.size()) {
                         mas[i][j] = tempMas[pos++]
                     }
@@ -224,18 +257,12 @@ class Game {
             }
         }
 
-        boolean isEnd = false
-        if (hodLimit) {
-            currentHodCount++
-
-            if (currentHodCount == params.endParams.hodCount) {
-                isEnd = true
-            }
-
-        }
-
         int totalWin = allFields.sum { t -> t.win }
         currentWin += totalWin
+
+        // проверяем на признаки окончания уровня
+        boolean isEnd = checkEndLevel(currentWin)
+
         return new RetModel(
                 level: level,
                 hod: hod,
@@ -246,6 +273,30 @@ class Game {
                 allFields: allFields.collect(),
                 isEnd: isEnd
         )
+    }
+
+    private boolean checkEndLevel(int currentWin) {
+        boolean isEnd = false
+
+        // лимит по количеству ходов
+        if (hodLimit) {
+            currentHodCount++
+
+            if (currentHodCount == params.endParams.hodCount) {
+                isEnd = true
+            }
+        }
+        // лимит по требуемым очкам
+        if (params.endParams.needWin > 0 && currentWin >= params.endParams.needWin) {
+            isEnd = true
+        }
+        // лимит по необходимому количеству взорванных линий
+        if (params.endParams.symbolsTypeCount.size() > 0) {
+            if (!currentSymbolLimit.any { t -> t > 0 }) {
+                isEnd = true
+            }
+        }
+        isEnd
     }
 
     private void tryFindLinesAfterSwap(String[][] mas, int x1, int y1, int x2, int y2) {
@@ -536,7 +587,6 @@ class Game {
                 }
             }
         }
-
 
 
     }

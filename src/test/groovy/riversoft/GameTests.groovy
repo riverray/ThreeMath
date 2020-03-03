@@ -2,6 +2,7 @@ package riversoft
 
 
 import groovy.json.JsonOutput
+import riversoft.base.EndLevelParams
 import riversoft.base.FieldParams
 import riversoft.base.Game
 import riversoft.base.RetModel
@@ -235,7 +236,7 @@ class GameTests extends Specification {
         startMas[x1][y1] == model.allFields[0].map[x2 * model.params.fieldWidth + y2]
     }
 
-    def 'проверка на ход'() {
+    def 'проверка на ограничение по количеству ходов'() {
         given:
         Game game = new Game()
         int level = 2
@@ -261,6 +262,76 @@ class GameTests extends Specification {
         game.field.map = tempMas
         game.hodLimit = true
         game.currentHodCount = 19
+        def model = game.makeMove(x1, y1, x2, y2)
+
+        then:
+        model.allFields.size() >= 2
+        model.isEnd
+    }
+
+    def 'проверка на ограничение по количеству выигрышных линий'() {
+        given:
+        Game game = new Game()
+        int level = 3
+        String[][] startMas = [
+                ["X", "1", "2", "2", "1", "1", "3", "X"],
+                ["2", "3", "4", "3", "1", "1", "4", "2"],
+                ["4", "1", "4", "3", "4", "4", "5", "3"],
+                ["4", "4", "2", "4", "2", "1", "2", "4"],
+                ["2", "2", "3", "4", "1", "3", "2", "5"],
+                ["5", "2", "5", "2", "2", "3", "1", "3"],
+                ["2", "2", "3", "4", "2", "3", "1", "2"],
+                ["X", "3", "3", "1", "1", "4", "5", "X"]
+        ]
+        int x1 = 3
+        int y1 = 1
+        int x2 = 2
+        int y2 = 1
+
+        when:
+        String[][] tempMas = new int[startMas.length][startMas[0].length]
+        cloneField(startMas, tempMas)
+
+        game.getStartField(level)
+        game.field.map = tempMas
+        game.hodLimit = true
+        game.currentSymbolLimit = [0, 0, 0, 1, 0]
+        def model = game.makeMove(x1, y1, x2, y2)
+
+        then:
+        model.allFields.size() >= 2
+        model.isEnd
+    }
+
+    def 'проверка на отрезанные углы'() {
+        given:
+        Game game = new Game()
+        game.fieldParamsDictionary.fieldParams.add(new FieldParams(width: 5, height: 5, hidePositions: [0, 4, 23, 24], symbols: game.fieldParamsDictionary.getLevelSymbols(game.fieldParamsDictionary.fieldParams.size() + 1).collect(),
+                endParams: new EndLevelParams(symbolsTypeCount: [2, 2, 2, 2, 2], hodCount: 30)))
+        int level = 3
+        String[][] startMas = [
+                ["X", "1", "2", "2", "1", "1", "3", "X"],
+                ["2", "3", "4", "3", "1", "1", "4", "2"],
+                ["4", "1", "4", "3", "4", "4", "5", "3"],
+                ["4", "4", "2", "4", "2", "1", "2", "4"],
+                ["2", "2", "3", "4", "1", "3", "2", "5"],
+                ["5", "2", "5", "2", "2", "3", "1", "3"],
+                ["2", "2", "3", "4", "2", "3", "1", "2"],
+                ["X", "3", "3", "1", "1", "4", "5", "X"]
+        ]
+        int x1 = 3
+        int y1 = 1
+        int x2 = 2
+        int y2 = 1
+
+        when:
+        String[][] tempMas = new int[startMas.length][startMas[0].length]
+        cloneField(startMas, tempMas)
+
+        game.getStartField(level)
+        game.field.map = tempMas
+        game.hodLimit = true
+        game.currentSymbolLimit = [0, 0, 0, 1, 0]
         def model = game.makeMove(x1, y1, x2, y2)
 
         then:
