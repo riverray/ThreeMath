@@ -306,23 +306,21 @@ class GameTests extends Specification {
     def 'проверка на отрезанные углы'() {
         given:
         Game game = new Game()
+        game.fieldParamsDictionary.symbolsByLevels.add([1, 2, 3, 4])
         game.fieldParamsDictionary.fieldParams.add(new FieldParams(width: 5, height: 5, hidePositions: [0, 4, 23, 24], symbols: game.fieldParamsDictionary.getLevelSymbols(game.fieldParamsDictionary.fieldParams.size() + 1).collect(),
-                endParams: new EndLevelParams(symbolsTypeCount: [2, 2, 2, 2, 2], hodCount: 30)))
-        int level = 3
+                endParams: new EndLevelParams(needWin: 30)))
+        int level = 4
         String[][] startMas = [
-                ["X", "1", "2", "2", "1", "1", "3", "X"],
-                ["2", "3", "4", "3", "1", "1", "4", "2"],
-                ["4", "1", "4", "3", "4", "4", "5", "3"],
-                ["4", "4", "2", "4", "2", "1", "2", "4"],
-                ["2", "2", "3", "4", "1", "3", "2", "5"],
-                ["5", "2", "5", "2", "2", "3", "1", "3"],
-                ["2", "2", "3", "4", "2", "3", "1", "2"],
-                ["X", "3", "3", "1", "1", "4", "5", "X"]
+                ["X", "1", "1", "3", "X"],
+                ["2", "2", "3", "4", "1"],
+                ["4", "X", "2", "2", "3"],
+                ["2", "2", "3", "4", "2"],
+                ["X", "3", "4", "4", "X"]
         ]
-        int x1 = 3
-        int y1 = 1
-        int x2 = 2
-        int y2 = 1
+        int x1 = 2
+        int y1 = 2
+        int x2 = 3
+        int y2 = 2
 
         when:
         String[][] tempMas = new int[startMas.length][startMas[0].length]
@@ -336,7 +334,6 @@ class GameTests extends Specification {
 
         then:
         model.allFields.size() >= 2
-        model.isEnd
     }
 
     private void cloneField(String[][] startMas, String[][] tempMas) {

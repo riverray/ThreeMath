@@ -4,7 +4,7 @@ class FieldParamsDictionary {
     List<FieldParams> fieldParams = []
     List<Symbol> allSymbols = []
 
-    int[][] symbolsByLevels
+    List<List<Integer>> symbolsByLevels = []
 
     FieldParamsDictionary() {
         // заносим все доступные в игре символы
@@ -15,11 +15,9 @@ class FieldParamsDictionary {
         allSymbols.add(new Symbol(name: "5"))
 
         // задаем номера символов, которые используются уровнем
-        symbolsByLevels = [
-                [1, 2, 3, 4],
-                [1, 2, 3, 4, 5],
-                [1, 2, 3, 4, 5]
-        ]
+        symbolsByLevels.add([1, 2, 3, 4])
+        symbolsByLevels.add([1, 2, 3, 4, 5])
+        symbolsByLevels.add([1, 2, 3, 4, 5])
 
         // TODO добавить возврат символов
         fieldParams.add(new FieldParams(width: 6, height: 6, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(),
