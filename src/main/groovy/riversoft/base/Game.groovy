@@ -123,6 +123,7 @@ class Game {
     }
 
     RetModel makeMove(int posX1, int posY1, int posX2, int posY2) {
+        // проверяем выход за пределы поля
         if (posX1 >= params.width || posX2 >= params.width || posY1 >= params.height || posY2 >= params.height ||
                 posX1 < 0 || posY1 < 0 || posX2 < 0 || posY2 < 0) {
             throw new RuntimeException("Cells not in field")

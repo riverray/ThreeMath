@@ -336,6 +336,32 @@ class GameTests extends Specification {
         model.allFields.size() >= 2
     }
 
+    def 'бот'() {
+        given:
+        Game game = new Game()
+        int level = 1
+        boolean flag = true
+        Random rand = new Random()
+
+        when:
+        for (int a = 0; a < 1000; a++) {
+            RetModel model = game.getStartField(level)
+
+            while (!model.isEnd) {
+                List<List<String>> mas = []
+                for (int i = 0; i < model.params.fieldWidth; i++) {
+                    mas.add(model.allFields.last().map.drop(i * model.params.fieldWidth).take(model.params.fieldWidth).toList())
+                }
+                def potentialList = checkForPotentialLines(mas, model.params.fieldHeight, model.params.fieldWidth)
+                def poses = potentialList[rand.nextInt(potentialList.size())]
+                model = game.makeMove(poses[0], poses[1], poses[2], poses[3])
+            }
+        }
+
+        then:
+        flag
+    }
+
     private void cloneField(String[][] startMas, String[][] tempMas) {
         for (int i = 0; i < startMas.length; i++) {
             for (int j = 0; j < startMas[0].length; j++) {
@@ -343,4 +369,144 @@ class GameTests extends Specification {
             }
         }
     }
+
+    // проверяем все поле на наличие потенциальных линий
+    private List<List<Integer>> checkForPotentialLines(List<List<String>> mas, int height, int width) {
+        List<List<Integer>> list = []
+
+        // проверяем два в строке и через одну или сверху/снизу
+        for (int i = 0; i < height; i++) {
+            String sym = mas[i][0]
+            int startPos = 0
+            int count = 1
+
+            for (int j = 1; j < width; j++) {
+                // символ совпадает - этого достаточно, тогда проверяем
+                if (mas[i][j] == sym) {
+                    count++
+                }
+                // символ не совпал
+                else {
+                    if (count >= 2) {
+                        // проверим через один вперед
+                        if (j + 1 < width) {
+                            if (mas[i][j + 1] == sym) {
+                                list.add([i, j, i, j + 1])
+                            }
+                        }
+                        // проверим через один назад
+                        if (startPos - 2 >= 0) {
+                            if (mas[i][startPos - 2] == sym) {
+                                list.add([i, startPos - 1, i, startPos - 2])
+                            }
+                        }
+                        // проверим вверх от символов
+                        if (i - 1 >= 0) {
+                            if (mas[i - 1][j] == sym) {
+                                list.add([i, j, i - 1, j])
+                            }
+                            if (startPos - 1 >= 0 && mas[i - 1][startPos - 1] == sym) {
+                                list.add([i, startPos - 1, i - 1, startPos - 1])
+                            }
+                        }
+                        // проверим вниз от символов
+                        if (i + 1 < height) {
+                            if (mas[i + 1][j] == sym) {
+                                list.add([i, j, i + 1, j])
+                            }
+                            if (startPos - 1 >= 0 && mas[i + 1][startPos - 1] == sym) {
+                                list.add([i, startPos - 1, i + 1, startPos - 1])
+                            }
+                        }
+                    }
+                    sym = mas[i][j]
+                    count = 1
+                    startPos = j
+                }
+            }
+        }
+
+        // проверяем два в ряду и через одну или сбоку
+        for (int j = 0; j < width; j++) {
+            String sym = mas[0][j]
+            int startPos = 0
+            int count = 1
+
+            for (int i = 1; i < height; i++) {
+                // символ совпадает - этого достаточно, тогда проверяем
+                if (mas[i][j] == sym) {
+                    count++
+                }
+                // символ не совпал
+                else {
+                    if (count >= 2) {
+                        // проверим через один вниз
+                        if (i + 1 < height) {
+                            if (mas[i + 1][j] == sym) {
+                                list.add([i, j, i + 1, j])
+                            }
+                        }
+                        // проверим через один вверх
+                        if (startPos - 2 >= 0) {
+                            if (mas[startPos - 2][j] == sym) {
+                                list.add([startPos - 1, j, startPos - 2, j])
+                            }
+                        }
+                        // проверим влево от символов
+                        if (j - 1 >= 0) {
+                            if (mas[i][j - 1] == sym) {
+                                list.add([i, j, i, j - 1])
+                            }
+                            if (startPos - 1 >= 0 && mas[startPos - 1][j - 1] == sym) {
+                                list.add([startPos - 1, j, startPos - 1, j - 1])
+                            }
+                        }
+                        // проверим вправо от символов
+                        if (j + 1 < width) {
+                            if (mas[i][j + 1] == sym) {
+                                list.add([i, j, i, j + 1])
+                            }
+                            if (startPos - 1 >= 0 && mas[startPos - 1][j + 1] == sym) {
+                                list.add([startPos - 1, j, startPos - 1, j + 1])
+                            }
+                        }
+                    }
+                    sym = mas[i][j]
+                    count = 1
+                    startPos = i
+                }
+            }
+        }
+
+        // проверяем через один в строку и сверху/снизу
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width - 2; j++) {
+                // есть строка вверху и символ в ней посередине совпадает
+                if (i > 0 && mas[i][j] == mas[i][j + 2] && mas[i][j] == mas[i - 1][j + 1]) {
+                    list.add([i, j + 1, i - 1, j + 1])
+                }
+                // есть строка внизу и символ в ней посередине совпадает
+                if (i < height - 1 && mas[i][j] == mas[i][j + 2] && mas[i][j] == mas[i + 1][j + 1]) {
+                    list.add([i, j + 1, i + 1, j + 1])
+                }
+            }
+        }
+        // проверяем через один в столбец и слева/справа
+        for (int j = 0; j < width; j++) {
+            for (int i = 0; i < height - 2; i++) {
+                // есть столбец слева и символ в нем посередине совпадает
+                if (j > 0 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j - 1]) {
+                    list.add([i + 1, j, i + 1, j - 1])
+                }
+                // есть столбец справа и символ в нем посередине совпадает
+                if (i < width - 1 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j + 1]) {
+                    list.add([i, j, i, j + 1])
+                }
+            }
+        }
+
+        return list
+    }
+
+
 }
