@@ -275,8 +275,11 @@ class Game {
         int totalWin = allFields.sum { t -> t.win }
         currentWin += totalWin
 
-        // проверяем на признаки окончания уровня
-        boolean isEnd = checkEndLevel(currentWin)
+        // проверяем на признаки окончания уровня по выполнению условий
+        boolean toNextLevel = checkEndLevel(currentWin)
+
+        // проверяем на признаки окончания уровня по окончанию количества ходов
+        boolean isEnd = checkEndHod()
 
         return new RetModel(
                 level: level,
@@ -286,32 +289,36 @@ class Game {
                 endParams: params.endParams,
                 params: getCurrentGameParams(),
                 allFields: allFields.collect(),
-                isEnd: isEnd
+                isEnd: isEnd,
+                toNextLevel: toNextLevel
         )
     }
 
     private boolean checkEndLevel(int currentWin) {
-        boolean isEnd = false
-
-        // лимит по количеству ходов
-        if (hodLimit) {
-            currentHodCount++
-
-            if (currentHodCount == params.endParams.hodCount) {
-                isEnd = true
-            }
-        }
         // лимит по требуемым очкам
         if (params.endParams.needWin > 0 && currentWin >= params.endParams.needWin) {
-            isEnd = true
+            return true
         }
         // лимит по необходимому количеству взорванных линий
         if (params.endParams.symbolsTypeCount.size() > 0) {
             if (!currentSymbolLimit.any { t -> t > 0 }) {
-                isEnd = true
+                return true
             }
         }
-        isEnd
+
+        return false
+    }
+
+    private boolean checkEndHod() {
+        if (hodLimit) {
+            currentHodCount++
+
+            if (currentHodCount == params.endParams.hodCount) {
+                return true
+            }
+        }
+
+        return false
     }
 
     private void tryFindLinesAfterSwap(String[][] mas, int x1, int y1, int x2, int y2) {

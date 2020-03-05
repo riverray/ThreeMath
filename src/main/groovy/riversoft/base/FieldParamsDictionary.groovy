@@ -23,7 +23,7 @@ class FieldParamsDictionary {
         fieldParams.add(new FieldParams(width: 6, height: 6, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(),
                 endParams: new EndLevelParams(needWin: 30)))
         fieldParams.add(new FieldParams(width: 7, height: 7, hidePositions: [], symbols: getLevelSymbols(fieldParams.size() + 1).collect(),
-                endParams: new EndLevelParams(needWin: 30, hodCount: 20)))
+                endParams: new EndLevelParams(needWin: 50, hodCount: 20)))
         fieldParams.add(new FieldParams(width: 8, height: 8, hidePositions: [0, 7, 56, 63], symbols: getLevelSymbols(fieldParams.size() + 1).collect(),
                 endParams: new EndLevelParams(symbolsTypeCount: [2, 2, 2, 2, 2], hodCount: 40)))
     }

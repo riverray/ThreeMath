@@ -269,6 +269,37 @@ class GameTests extends Specification {
         model.isEnd
     }
 
+    def 'проверка на ограничение по количеству очков'() {
+        given:
+        Game game = new Game()
+        int level = 1
+        String[][] startMas = [
+                ["3", "1", "2", "2", "1", "1"],
+                ["2", "3", "4", "3", "1", "1"],
+                ["4", "1", "4", "3", "4", "4"],
+                ["4", "2", "2", "4", "2", "1"],
+                ["2", "2", "3", "4", "1", "3"],
+                ["4", "3", "3", "1", "1", "4"]
+        ]
+        int x1 = 2
+        int y1 = 3
+        int x2 = 3
+        int y2 = 3
+
+        when:
+        String[][] tempMas = new int[startMas.length][startMas[0].length]
+        cloneField(startMas, tempMas)
+
+        game.getStartField(level)
+        game.field.map = tempMas
+        game.currentWin = 29
+        def model = game.makeMove(x1, y1, x2, y2)
+
+        then:
+        model.allFields.size() >= 2
+        model.toNextLevel
+    }
+
     def 'проверка на ограничение по количеству выигрышных линий'() {
         given:
         Game game = new Game()
@@ -300,7 +331,7 @@ class GameTests extends Specification {
 
         then:
         model.allFields.size() >= 2
-        model.isEnd
+        model.toNextLevel
     }
 
     def 'проверка на отрезанные углы'() {
@@ -403,7 +434,7 @@ class GameTests extends Specification {
         model.allFields.size() == 1
     }
 
-    def 'бот'() {
+    def 'бот уровень 1'() {
         given:
         Game game = new Game()
         int level = 1
@@ -414,7 +445,7 @@ class GameTests extends Specification {
         for (int a = 0; a < 1000; a++) {
             RetModel model = game.getStartField(level)
 
-            while (!model.isEnd) {
+            while (!model.toNextLevel) {
                 List<List<String>> mas = []
                 for (int i = 0; i < model.params.fieldWidth; i++) {
                     mas.add(model.allFields.last().map.drop(i * model.params.fieldWidth).take(model.params.fieldWidth).toList())
@@ -423,6 +454,41 @@ class GameTests extends Specification {
                 def poses = potentialList[rand.nextInt(potentialList.size())]
                 model = game.makeMove(poses[0], poses[1], poses[2], poses[3])
             }
+
+        }
+
+        then:
+        flag
+    }
+
+    def 'бот уровень 2'() {
+        given:
+        Game game = new Game()
+        int level = 2
+        boolean flag = true
+        Random rand = new Random()
+
+        when:
+        for (int a = 0; a < 1000; a++) {
+            RetModel model = game.getStartField(level)
+
+            while (!model.toNextLevel) {
+                List<List<String>> mas = []
+                for (int i = 0; i < model.params.fieldWidth; i++) {
+                    mas.add(model.allFields.last().map.drop(i * model.params.fieldWidth).take(model.params.fieldWidth).toList())
+                }
+                def potentialList = checkForPotentialLines(mas, model.params.fieldHeight, model.params.fieldWidth)
+                if (potentialList.size() == 0) {
+                    break
+                }
+                def poses = potentialList[rand.nextInt(potentialList.size())]
+                model = game.makeMove(poses[0], poses[1], poses[2], poses[3])
+
+                if (model.isEnd) {
+                    break
+                }
+            }
+
         }
 
         then:
