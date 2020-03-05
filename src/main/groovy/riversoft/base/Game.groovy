@@ -128,6 +128,20 @@ class Game {
                 posX1 < 0 || posY1 < 0 || posX2 < 0 || posY2 < 0) {
             throw new RuntimeException("Cells not in field")
         }
+        // проверяем смежность ячеек и разрешение на их обмен
+        if (params.onlyTouchCells) {
+            if (!(posY1 == posY2 && Math.abs(posX1 - posX2) == 1 || posX1 == posX2 && Math.abs(posY1 - posY2) == 1)) {
+                return new RetModel(
+                        level: level,
+                        hod: hod,
+                        totalWin: 0,
+                        currentWin: 0,
+                        endParams: params.endParams,
+                        params: getCurrentGameParams(),
+                        allFields: allFields.collect()
+                )
+            }
+        }
 
         allFields.clear()
 

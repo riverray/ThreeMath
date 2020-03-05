@@ -336,6 +336,73 @@ class GameTests extends Specification {
         model.allFields.size() >= 2
     }
 
+    def 'запрет обмена несмежных ячеек'() {
+        given:
+        Game game = new Game()
+        int level = 1
+        String[][] startMas = [
+                ["1", "1", "1", "1", "1", "1"],
+                ["1", "1", "1", "1", "1", "1"],
+                ["1", "1", "1", "1", "1", "1"],
+                ["1", "1", "1", "1", "1", "1"],
+                ["1", "1", "1", "1", "1", "1"],
+                ["1", "1", "1", "1", "1", "1"]
+        ]
+        // через строку
+        int x1 = 2
+        int y1 = 2
+        int x2 = 4
+        int y2 = 2
+
+        when:
+        String[][] tempMas = new int[startMas.length][startMas[0].length]
+        cloneField(startMas, tempMas)
+
+        game.getStartField(level)
+        game.field.map = tempMas
+        def model = game.makeMove(x1, y1, x2, y2)
+
+        then:
+        model.totalWin == 0
+        model.allFields.size() == 1
+
+        // через столбцы
+        when:
+        x1 = 2
+        y1 = 2
+        x2 = 2
+        y2 = 5
+        model = game.makeMove(x1, y1, x2, y2)
+
+        then:
+        model.totalWin == 0
+        model.allFields.size() == 1
+
+        // через строки и столбцы
+        when:
+        x1 = 2
+        y1 = 2
+        x2 = 4
+        y2 = 5
+        model = game.makeMove(x1, y1, x2, y2)
+
+        then:
+        model.totalWin == 0
+        model.allFields.size() == 1
+
+        // по диагонали
+        when:
+        x1 = 2
+        y1 = 2
+        x2 = 3
+        y2 = 3
+        model = game.makeMove(x1, y1, x2, y2)
+
+        then:
+        model.totalWin == 0
+        model.allFields.size() == 1
+    }
+
     def 'бот'() {
         given:
         Game game = new Game()
