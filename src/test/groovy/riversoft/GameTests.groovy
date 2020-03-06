@@ -261,7 +261,7 @@ class GameTests extends Specification {
         game.getStartField(level)
         game.field.map = tempMas
         game.hodLimit = true
-        game.hod = 19
+        game.hod = 9
         def model = game.makeMove(x1, y1, x2, y2)
 
         then:
@@ -307,8 +307,8 @@ class GameTests extends Specification {
         String[][] startMas = [
                 ["X", "1", "2", "2", "1", "1", "3", "X"],
                 ["2", "3", "4", "3", "1", "1", "4", "2"],
-                ["4", "1", "4", "3", "4", "4", "5", "3"],
-                ["4", "4", "2", "4", "2", "1", "2", "4"],
+                ["5", "1", "5", "3", "4", "4", "5", "3"],
+                ["4", "5", "2", "4", "2", "1", "2", "4"],
                 ["2", "2", "3", "4", "1", "3", "2", "5"],
                 ["5", "2", "5", "2", "2", "3", "1", "3"],
                 ["2", "2", "3", "4", "2", "3", "1", "2"],
@@ -323,11 +323,11 @@ class GameTests extends Specification {
         String[][] tempMas = new int[startMas.length][startMas[0].length]
         cloneField(startMas, tempMas)
 
-        game.getStartField(level)
+        def model = game.getStartField(level)
         game.field.map = tempMas
         game.hodLimit = true
-        game.currentSymbolLimit = [0, 0, 0, 1, 0]
-        def model = game.makeMove(x1, y1, x2, y2)
+        game.currentSymbolLinesLimit = [0, 0, 0, 0, 1]
+        model = game.makeMove(x1, y1, x2, y2)
 
         then:
         model.allFields.size() >= 2
@@ -360,7 +360,7 @@ class GameTests extends Specification {
         game.getStartField(level)
         game.field.map = tempMas
         game.hodLimit = true
-        game.currentSymbolLimit = [0, 0, 0, 1, 0]
+        game.currentSymbolLinesLimit = [0, 0, 0, 1, 0]
         def model = game.makeMove(x1, y1, x2, y2)
 
         then:

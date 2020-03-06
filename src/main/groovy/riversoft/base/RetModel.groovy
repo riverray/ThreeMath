@@ -4,6 +4,7 @@ class RetModel {
     RetFieldParams params
     int level
     int hod
+    List<Integer> linesLeft = []
 
     int totalWin
     int currentWin

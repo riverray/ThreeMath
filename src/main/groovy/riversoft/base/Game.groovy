@@ -1,7 +1,5 @@
 package riversoft.base
 
-import javax.swing.text.MaskFormatter
-
 class Game {
     // параметра поля
     FieldParams params
@@ -27,7 +25,7 @@ class Game {
     boolean hodLimit = false
 
     boolean symbolsLimit = false
-    List<Integer> currentSymbolLimit = []
+    List<Integer> currentSymbolLinesLimit = []
 
     Random rand = new Random()
 
@@ -55,7 +53,7 @@ class Game {
         // устанавливаем требование по количеству взорванных символов
         if (params.endParams.symbolsTypeCount.size() > 0) {
             symbolsLimit = true
-            currentSymbolLimit = params.endParams.symbolsTypeCount.collect()
+            currentSymbolLinesLimit = params.endParams.symbolsTypeCount.collect()
             111
         }
 
@@ -117,7 +115,8 @@ class Game {
                 currentWin: 0,
                 endParams: params.endParams,
                 params: getCurrentGameParams(),
-                allFields: allFields.collect()
+                allFields: allFields.collect(),
+                linesLeft: currentSymbolLinesLimit.collect(),
         )
     }
 
@@ -183,8 +182,10 @@ class Game {
             // если окончание по количеству символов - уменьшаем
             if (symbolsLimit) {
                 for (def line : field.lines) {
-                    111
-                    currentSymbolLimit[params.symbols.findIndexOf { t -> t.name == line.symbol }]--
+                    int index = params.symbols.findIndexOf { t -> t.name == line.symbol }
+                    if (currentSymbolLinesLimit[index] > 0) {
+                        currentSymbolLinesLimit[index]--
+                    }
                 }
             }
 
@@ -288,6 +289,7 @@ class Game {
                 endParams: params.endParams,
                 params: getCurrentGameParams(),
                 allFields: allFields.collect(),
+                linesLeft: currentSymbolLinesLimit.collect(),
                 isEnd: isEnd,
                 toNextLevel: toNextLevel
         )
@@ -300,7 +302,7 @@ class Game {
         }
         // лимит по необходимому количеству взорванных линий
         if (params.endParams.symbolsTypeCount.size() > 0) {
-            if (!currentSymbolLimit.any { t -> t > 0 }) {
+            if (!currentSymbolLinesLimit.any { t -> t > 0 }) {
                 return true
             }
         }
@@ -310,7 +312,7 @@ class Game {
 
     private boolean checkEndHod() {
         if (hodLimit) {
-            if (hod == params.endParams.hodCount) {
+            if (hod >= params.endParams.hodCount) {
                 return true
             }
         }
