@@ -261,7 +261,7 @@ class GameTests extends Specification {
         game.getStartField(level)
         game.field.map = tempMas
         game.hodLimit = true
-        game.currentHodCount = 19
+        game.hod = 19
         def model = game.makeMove(x1, y1, x2, y2)
 
         then:
@@ -453,7 +453,13 @@ class GameTests extends Specification {
                 def potentialList = checkForPotentialLines(mas, model.params.fieldHeight, model.params.fieldWidth)
                 def poses = potentialList[rand.nextInt(potentialList.size())]
                 model = game.makeMove(poses[0], poses[1], poses[2], poses[3])
+
+                if (model.isEnd) {
+                    break
+                }
             }
+
+            111
 
         }
 
@@ -633,7 +639,7 @@ class GameTests extends Specification {
                 }
                 // есть столбец справа и символ в нем посередине совпадает
                 if (i < width - 1 && mas[i][j] == mas[i + 2][j] && mas[i][j] == mas[i + 1][j + 1]) {
-                    list.add([i, j, i, j + 1])
+                    list.add([i + 1, j, i + 1, j + 1])
                 }
             }
         }

@@ -25,7 +25,6 @@ class Game {
     int currentWin
 
     boolean hodLimit = false
-    int currentHodCount = 0
 
     boolean symbolsLimit = false
     List<Integer> currentSymbolLimit = []
@@ -43,7 +42,7 @@ class Game {
     }
 
     RetModel getStartField(int level) {
-        hod = currentWin = currentHodCount = 0
+        hod = currentWin = 0
         hodLimit = symbolsLimit = false
 
         this.level = level
@@ -311,9 +310,7 @@ class Game {
 
     private boolean checkEndHod() {
         if (hodLimit) {
-            currentHodCount++
-
-            if (currentHodCount == params.endParams.hodCount) {
+            if (hod == params.endParams.hodCount) {
                 return true
             }
         }
